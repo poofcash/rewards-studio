@@ -20,7 +20,7 @@ const Row: React.FC<RowProps> = ({ index, style, data }) => {
   const { wc, refetchWC } = data;
   const pendingWithdrawal = wc.pendingWithdrawals[index];
   const { performActions } = useContractKit();
-  const eta = moment.unix(pendingWithdrawal.time.toNumber()).add(3, "days");
+  const eta = moment.unix(pendingWithdrawal.time.toNumber());
   const now = React.useMemo(() => moment(), []);
   return (
     <Box style={style} mb={2}>
