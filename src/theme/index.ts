@@ -23,7 +23,7 @@ export const preset = {
         muted: "#757575",
         gray: "#bababa",
         darkgray: "#BDBDBD",
-        highlight: "hsla(205, 100%, 40%, 0.125)",
+        highlight: "hsla(205, 100%, 40%)",
         box: "#363945",
         disabled: "#BDBDBD",
         link: "#7C71FC",
@@ -181,7 +181,7 @@ export const preset = {
       borderRadius: ["32px", "6px"],
       height: ["48px", "42px"],
       color: "text",
-      bg: "primary",
+      bg: "highlight",
     },
     secondary: {
       variant: "buttons.primary",
@@ -203,7 +203,7 @@ export const preset = {
       color: "text",
       bg: "background",
       border: "4px solid",
-      borderColor: "primary",
+      borderColor: "highlight",
     },
     done: {
       variant: "buttons.secondary",
