@@ -4,7 +4,7 @@ import { BlockscoutAddressLink } from "components/Links";
 import { shortenAddress } from "utils/address";
 import { useContractKit } from "@celo-tools/use-contractkit";
 import { Link } from "react-router-dom";
-import { AbiItem, isAddress } from "web3-utils";
+import { AbiItem, isAddress, toWei, fromWei } from "web3-utils";
 import SavingsCELOVoterAbi from "abis/SavingsCELOVoterV1.json";
 import { SavingsCELO } from "generated/SavingsCELO";
 import { toastTx } from "utils/toastTx";
@@ -54,7 +54,10 @@ export const VoterDetails: React.FC<Props> = ({ wc, refetchWC }) => {
                   ) as unknown) as SavingsCELO;
                   const tx = await voterContract.methods
                     .transferOwnership(changed)
-                    .send({ from: kit.defaultAccount });
+                    .send({
+                      from: kit.defaultAccount,
+                      gasPrice: toWei("0.13", "gwei"),
+                    });
                   toastTx(tx.transactionHash);
                   refetchWC();
                 });
@@ -88,14 +91,20 @@ export const VoterDetails: React.FC<Props> = ({ wc, refetchWC }) => {
                     alert("No connected account.");
                     return;
                   }
-
-                  const savingsKit = new SavingsKit(kit, wc.tokenAddress);
-                  const voter = new VoterV1(kit, savingsKit, wc.voter);
-                  const tx = await (
-                    await voter.changeVotedGroup(changed)
-                  ).send({ from: kit.defaultAccount });
-                  toastTx(await tx.getHash());
-                  refetchWC();
+                  try {
+                    const savingsKit = new SavingsKit(kit, wc.tokenAddress);
+                    const voter = new VoterV1(kit, savingsKit, wc.voter);
+                    const tx = await (
+                      await voter.changeVotedGroup(changed)
+                    ).send({
+                      from: kit.defaultAccount,
+                      gasPrice: toWei("0.13", "gwei"),
+                    });
+                    toastTx(await tx.getHash());
+                    refetchWC();
+                  } catch (e) {
+                    console.error(e);
+                  }
                 });
               }}
             >
@@ -106,8 +115,32 @@ export const VoterDetails: React.FC<Props> = ({ wc, refetchWC }) => {
             <Text variant="bold" mr={2}>
               Pending votes:
             </Text>
-            <Text>{wc.pendingVotes.toString()} CELO</Text>
-            <Button ml={2} disabled={!wc.needsActivate} variant="secondary">
+            <Text>{fromWei(wc.pendingVotes.toString())} CELO</Text>
+            <Button
+              ml={2}
+              disabled={!wc.needsActivate}
+              variant="secondary"
+              onClick={() => {
+                performActions(async (kit) => {
+                  if (!kit.defaultAccount) {
+                    alert("No connected account.");
+                    return;
+                  }
+                  try {
+                    const savingsKit = new SavingsKit(kit, wc.tokenAddress);
+                    const voter = new VoterV1(kit, savingsKit, wc.voter);
+                    const tx = await (await voter.activateAndVote()).send({
+                      from: kit.defaultAccount,
+                      gasPrice: toWei("0.13", "gwei"),
+                    });
+                    toastTx(await tx.getHash());
+                    refetchWC();
+                  } catch (e) {
+                    console.error(e);
+                  }
+                });
+              }}
+            >
               activate
             </Button>
           </Box>

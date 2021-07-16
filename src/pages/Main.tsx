@@ -23,7 +23,12 @@ export const Main: React.FC = () => {
   const history = useHistory();
 
   const connectWalletButton = (
-    <Button sx={{ width: "200px" }} onClick={connect}>
+    <Button
+      sx={{ width: "200px" }}
+      onClick={() => {
+        connect().catch(console.error);
+      }}
+    >
       Connect Wallet
     </Button>
   );
