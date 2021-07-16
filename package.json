@@ -1,0 +1,90 @@
+{
+  "name": "@poofcash/rewards-studio",
+  "homepage": ".",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@celo-tools/use-contractkit": "^1.0.6",
+    "@celo/contractkit": "^1.0.2",
+    "@celo/wallet-ledger": "^1.0.2",
+    "@emotion/react": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@ethersproject/contracts": "^5.0.12",
+    "@ethersproject/providers": "^5.0.24",
+    "@ethersproject/solidity": "^5.0.10",
+    "@poofcash/poof-token": "^1.0.1",
+    "@poofcash/savingscelo": "^3.3.0-poof-1",
+    "@reduxjs/toolkit": "^1.5.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-modal": "^3.12.0",
+    "@types/react-router-dom": "^5.1.8",
+    "@types/react-window": "^1.8.4",
+    "@ubeswap/sdk": "^2.0.1",
+    "axios": "^0.21.1",
+    "i18next": "^20.2.1",
+    "moment": "^2.29.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-feather": "^2.0.9",
+    "react-i18next": "^11.8.12",
+    "react-modal": "^3.12.1",
+    "react-redux": "^7.2.2",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "react-toastify": "^7.0.4",
+    "react-window": "^1.8.6",
+    "theme-ui": "^0.10.0",
+    "typescript": "^4.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "postinstall": "yarn typechain",
+    "typechain": "typechain --target=web3-v1 'src/**/abis/**/*.json' --out-dir src/generated/",
+    "test": "react-scripts test",
+    "compile": "yarn truffle compile",
+    "eject": "react-scripts eject",
+    "format": "prettier --write ."
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "3.2.0",
+    "@typechain/web3-v1": "^3.0.0",
+    "husky": "=4",
+    "lint-staged": ">=10",
+    "prettier": "2.2.1",
+    "truffle": "^5.4.0",
+    "typechain": "^5.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,md,tsx,ts}": "prettier --write"
+  }
+}

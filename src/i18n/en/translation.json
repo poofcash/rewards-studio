@@ -1,0 +1,22 @@
+{
+  "title": "Rewards Studio",
+  "subtitle": "Create and manage your wrapped CELO",
+  "create": {
+    "wc": {
+      "title": "Create wrapped CELO",
+      "subtitle": "Create an interest-bearing CELO token",
+      "receipt": {
+        "title": "Voila!",
+        "subtitle": "You just created an interest-bearing CELO token"
+      }
+    },
+    "voter": {
+      "title": "Create a voter",
+      "subtitle": "Create a voter to manage your wrapped CELO token",
+      "receipt": {
+        "title": "Voila!",
+        "subtitle": "You just created a voter to manage your wrapped CELO token"
+      }
+    }
+  }
+}

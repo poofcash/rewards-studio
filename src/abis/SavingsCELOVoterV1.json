@@ -1,0 +1,148 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "savingsCELO",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "_proxy",
+    "outputs": [
+      {
+        "internalType": "contract IVoterProxy",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "votedGroup",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newGroup",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "votedGroupIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "lesserAfterPendingRevoke",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "greaterAfterPendingRevoke",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "lesserAfterActiveRevoke",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "greaterAfterActiveRevoke",
+        "type": "address"
+      }
+    ],
+    "name": "changeVotedGroup",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "lesser",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "greater",
+        "type": "address"
+      }
+    ],
+    "name": "activateAndVote",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
+
