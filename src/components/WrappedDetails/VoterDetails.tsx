@@ -33,7 +33,10 @@ export const VoterDetails: React.FC<Props> = ({ wc, refetchWC }) => {
             <Button
               ml={2}
               variant="secondary"
-              disabled={address !== wc.voterOwner}
+              disabled={
+                !address ||
+                address.toLowerCase() !== wc.voterOwner.toLowerCase()
+              }
               onClick={() => {
                 const changed = prompt("Enter new manager address");
                 if (!changed) {
@@ -76,7 +79,10 @@ export const VoterDetails: React.FC<Props> = ({ wc, refetchWC }) => {
             <Button
               ml={2}
               variant="secondary"
-              disabled={address !== wc.voterOwner}
+              disabled={
+                !address ||
+                address.toLowerCase() !== wc.voterOwner.toLowerCase()
+              }
               onClick={() => {
                 const changed = prompt("Enter new validator group address");
                 if (!changed) {

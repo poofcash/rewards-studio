@@ -37,7 +37,9 @@ export const TokenDetails: React.FC<Props> = ({ wc, refetchWC }) => {
         <Button
           ml={2}
           variant="secondary"
-          disabled={wc.owner !== address}
+          disabled={
+            !address || wc.owner.toLowerCase() !== address.toLowerCase()
+          }
           onClick={() => {
             const changed = prompt("Enter new owner address");
             if (!changed) {
@@ -77,7 +79,9 @@ export const TokenDetails: React.FC<Props> = ({ wc, refetchWC }) => {
         <Button
           ml={2}
           variant="secondary"
-          disabled={wc.owner !== address}
+          disabled={
+            !address || wc.owner.toLowerCase() !== address.toLowerCase()
+          }
           onClick={() => {
             const changed = prompt("Enter new voter address");
             if (!changed) {
