@@ -93,10 +93,14 @@ export const Main: React.FC = () => {
         <Container>
           <form
             onSubmit={(e) => {
-              if (!isAddress(search)) {
-                alert(`${search} is not an address. Please try again.`);
+              if (rows.length > 0) {
+                setWrappedAddress(rows[0].address);
               } else {
-                setWrappedAddress(search);
+                if (!isAddress(search)) {
+                  alert(`${search} is not an address. Please try again.`);
+                } else {
+                  setWrappedAddress(search);
+                }
               }
               e.preventDefault();
             }}
