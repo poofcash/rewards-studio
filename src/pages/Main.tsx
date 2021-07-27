@@ -4,21 +4,35 @@ import {
   Flex,
   Text,
   Button,
-  Label,
   Input,
-  Divider,
   Heading,
+  Grid,
+  Link,
 } from "theme-ui";
 import { useTranslation } from "react-i18next";
 import { useContractKit } from "@celo-tools/use-contractkit";
 import { WrappedDetails } from "components/WrappedDetails";
 import { shortenAddress } from "utils/address";
 import { useHistory } from "react-router-dom";
+import { REGISTRY } from "config";
+import { useDebouncedCallback } from "use-debounce";
+import { RegistryList } from "components/RegistryList";
+import { isAddress } from "web3-utils";
 
 export const Main: React.FC = () => {
   const { t } = useTranslation();
   const { address, connect, destroy, network } = useContractKit();
-  const inputRef = React.createRef<any>();
+  const [search, setSearch] = React.useState("");
+  const [rows, setRows] = React.useState(REGISTRY);
+  const onSearchChanged = useDebouncedCallback((search) => {
+    setRows(
+      REGISTRY.filter(
+        ({ address, symbol }) =>
+          address.toLowerCase().includes(search.toLowerCase()) ||
+          symbol.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, 200);
   const [wrappedAddress, setWrappedAddress] = React.useState<string>();
   const history = useHistory();
 
@@ -75,24 +89,57 @@ export const Main: React.FC = () => {
           <Text ml={2}>{network.name}</Text>
         </Container>
       </Container>
-      <Container>
-        <form
-          onSubmit={(e) => {
-            if (inputRef) {
-              setWrappedAddress(inputRef.current.value);
-            }
-            e.preventDefault();
-          }}
-        >
-          <Label>Wrapped CELO address</Label>
-          <Flex>
-            <Input mr={2} placeholder="0x..." ref={inputRef} />
-            <Button type="submit">Go</Button>
-          </Flex>
-        </form>
-      </Container>
-      <Divider my={6} />
-      <WrappedDetails wrappedAddress={wrappedAddress} />
+      <Grid columns={[2, "33% 66%"]} mt={4}>
+        <Container>
+          <form
+            onSubmit={(e) => {
+              if (!isAddress(search)) {
+                alert(`${search} is not an address. Please try again.`);
+              } else {
+                setWrappedAddress(search);
+              }
+              e.preventDefault();
+            }}
+          >
+            <Input
+              sx={{
+                ":focus-visible": {
+                  outline: "none",
+                },
+                border: "none",
+                borderBottom: "4px solid white",
+              }}
+              placeholder="Search"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                onSearchChanged(e.target.value);
+              }}
+              mb={4}
+            />
+          </form>
+          {rows.length > 0 ? (
+            <RegistryList rows={rows} onRowClick={setWrappedAddress} />
+          ) : (
+            <>
+              <Text>Custom search for </Text>
+              <Link
+                sx={{ cursor: "pointer" }}
+                onClick={() => {
+                  if (!isAddress(search)) {
+                    alert(`${search} is not an address. Please try again.`);
+                    return;
+                  }
+                  setWrappedAddress(search);
+                }}
+              >
+                {search}
+              </Link>
+            </>
+          )}
+        </Container>
+        <WrappedDetails wrappedAddress={wrappedAddress} />
+      </Grid>
     </>
   );
 };

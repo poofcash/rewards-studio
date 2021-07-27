@@ -23,9 +23,9 @@ export const TokenDetails: React.FC<Props> = ({ wc, refetchWC }) => {
         <Text variant="bold" mr={2}>
           Token:
         </Text>
-        <Text>
+        <BlockscoutAddressLink address={wc.tokenAddress}>
           {wc.tokenName} (${wc.tokenSymbol})
-        </Text>
+        </BlockscoutAddressLink>
       </Box>
       <Box mt={2}>
         <Text variant="bold" mr={2}>

@@ -2,10 +2,11 @@ import React from "react";
 import { Box, Container } from "theme-ui";
 import { Header } from "components/Header";
 import { Route, Switch } from "react-router-dom";
-import "i18n/config";
 import { Main } from "pages/Main";
 import { Create } from "pages/Create";
 import { ToastContainer } from "react-toastify";
+
+import "i18n/config";
 
 const App: React.FC = () => {
   return (

@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import { useAsyncState } from "hooks/useAsyncState";
 import SavingsCELOAbi from "abis/SavingsCELO.json";
 import SavingsCELOVoterAbi from "abis/SavingsCELOVoterV1.json";
-import { AbiItem } from "web3-utils";
+import { AbiItem, isAddress } from "web3-utils";
 import { SavingsCELO } from "generated/SavingsCELO";
 import { SavingsCELOVoterV1 } from "generated/SavingsCELOVoterV1";
 import { newVoterV1 } from "@poofcash/savingscelo";
@@ -42,7 +42,7 @@ export const useWrappedCELO = (wrappedAddress?: string | null) => {
   }, [kit, wrappedAddress]);
 
   const wcCall = React.useCallback(async () => {
-    if (!wrappedAddress) {
+    if (!wrappedAddress || !isAddress(wrappedAddress)) {
       return null;
     }
     const tokenContract = (new kit.web3.eth.Contract(
