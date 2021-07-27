@@ -1,23 +1,24 @@
 import React from "react";
-import { RegistryEntry } from "config";
 import { Box } from "theme-ui";
 import { RegistryRow } from "components/RegistryRow";
+import { RegistrySummary } from "hooks/useRowSummaries";
 
 interface Props {
-  rows: RegistryEntry[];
+  rows: RegistrySummary[];
   onRowClick?: (address: string) => any;
 }
 
 export const RegistryList: React.FC<Props> = ({ rows, onRowClick }) => {
   return (
     <Box>
-      {rows.map(({ address, symbol }, idx) => {
+      {rows.map((row, idx) => {
         return (
-          <Box key={idx} my={1}>
-            <RegistryRow
-              symbol={symbol}
-              onClick={() => onRowClick && onRowClick(address)}
-            />
+          <Box
+            key={idx}
+            my={1}
+            onClick={() => onRowClick && onRowClick(row.entry.address)}
+          >
+            <RegistryRow row={row} />
           </Box>
         );
       })}

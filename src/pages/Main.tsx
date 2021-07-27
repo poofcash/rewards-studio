@@ -19,19 +19,26 @@ import { REGISTRY } from "config";
 import { useDebouncedCallback } from "use-debounce";
 import { RegistryList } from "components/RegistryList";
 import { isAddress } from "web3-utils";
+import { useRowSummaries } from "hooks/useRowSummaries";
 
 export const Main: React.FC = () => {
   const { t } = useTranslation();
   const { address, connect, destroy, network } = useContractKit();
   const [search, setSearch] = React.useState("");
-  const [rows, setRows] = React.useState(REGISTRY);
+  const [rows] = useRowSummaries(REGISTRY);
+  const [filteredRows, setFilteredRows] = React.useState(rows);
+  React.useEffect(() => {
+    setFilteredRows(rows.sort((a, b) => b.tvl - a.tvl));
+  }, [rows]);
   const onSearchChanged = useDebouncedCallback((search) => {
-    setRows(
-      REGISTRY.filter(
-        ({ address, symbol }) =>
-          address.toLowerCase().includes(search.toLowerCase()) ||
-          symbol.toLowerCase().includes(search.toLowerCase())
-      )
+    setFilteredRows(
+      rows
+        .filter(
+          ({ entry }) =>
+            entry.address.toLowerCase().includes(search.toLowerCase()) ||
+            entry.symbol.toLowerCase().includes(search.toLowerCase())
+        )
+        .sort((a, b) => b.tvl - a.tvl)
     );
   }, 200);
   const [wrappedAddress, setWrappedAddress] = React.useState<string>();
@@ -94,8 +101,8 @@ export const Main: React.FC = () => {
         <Container>
           <form
             onSubmit={(e) => {
-              if (rows.length > 0) {
-                setWrappedAddress(rows[0].address);
+              if (filteredRows.length > 0) {
+                setWrappedAddress(filteredRows[0].entry.address);
               } else {
                 if (!isAddress(search)) {
                   alert(`${search} is not an address. Please try again.`);
@@ -123,8 +130,8 @@ export const Main: React.FC = () => {
               mb={4}
             />
           </form>
-          {rows.length > 0 ? (
-            <RegistryList rows={rows} onRowClick={setWrappedAddress} />
+          {filteredRows.length > 0 ? (
+            <RegistryList rows={filteredRows} onRowClick={setWrappedAddress} />
           ) : (
             <>
               <Text>Custom search for </Text>
