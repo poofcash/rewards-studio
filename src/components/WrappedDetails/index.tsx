@@ -25,15 +25,15 @@ export const WrappedDetails: React.FC<Props> = ({ wrappedAddress }) => {
 
   return (
     <Box>
-      <Box m={4}>
+      <Box mb={4}>
         <TokenDetails wc={wc} refetchWC={refetchWC} />
       </Box>
       <Divider />
-      <Box m={4}>
+      <Box mb={4}>
         <VoterDetails wc={wc} refetchWC={refetchWC} />
       </Box>
       <Divider />
-      <Box m={4}>
+      <Box mb={4}>
         <UserDetails wc={wc} refetchWC={refetchWC} />
       </Box>
     </Box>

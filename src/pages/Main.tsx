@@ -8,6 +8,7 @@ import {
   Heading,
   Grid,
   Link,
+  Box,
 } from "theme-ui";
 import { useTranslation } from "react-i18next";
 import { useContractKit } from "@celo-tools/use-contractkit";
@@ -89,7 +90,7 @@ export const Main: React.FC = () => {
           <Text ml={2}>{network.name}</Text>
         </Container>
       </Container>
-      <Grid columns={[2, "33% 66%"]} mt={4}>
+      <Grid sx={{ gridTemplateColumns: ["100%", "33% 66%"] }} mt={4}>
         <Container>
           <form
             onSubmit={(e) => {
@@ -142,7 +143,9 @@ export const Main: React.FC = () => {
             </>
           )}
         </Container>
-        <WrappedDetails wrappedAddress={wrappedAddress} />
+        <Box mt={[4, 0]}>
+          <WrappedDetails wrappedAddress={wrappedAddress} />
+        </Box>
       </Grid>
     </>
   );
