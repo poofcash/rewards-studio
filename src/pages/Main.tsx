@@ -9,6 +9,7 @@ import {
   Grid,
   Link,
   Box,
+  Spinner,
 } from "theme-ui";
 import { useTranslation } from "react-i18next";
 import { useContractKit } from "@celo-tools/use-contractkit";
@@ -25,7 +26,7 @@ export const Main: React.FC = () => {
   const { t } = useTranslation();
   const { address, connect, destroy, network } = useContractKit();
   const [search, setSearch] = React.useState("");
-  const [rows] = useRowSummaries(REGISTRY);
+  const [rows, , rowsLoading] = useRowSummaries(REGISTRY);
   const [filteredRows, setFilteredRows] = React.useState(rows);
   React.useEffect(() => {
     setFilteredRows(rows.sort((a, b) => b.tvl - a.tvl));
@@ -132,6 +133,8 @@ export const Main: React.FC = () => {
           </form>
           {filteredRows.length > 0 ? (
             <RegistryList rows={filteredRows} onRowClick={setWrappedAddress} />
+          ) : rowsLoading ? (
+            <Spinner />
           ) : (
             <>
               <Text>Custom search for </Text>
