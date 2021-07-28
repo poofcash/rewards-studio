@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Container } from "theme-ui";
 import { Header } from "components/Header";
 import { Route, Switch } from "react-router-dom";
-import { Main } from "pages/Main";
+import { Manage } from "pages/Manage";
 import { Create } from "pages/Create";
 import { ToastContainer } from "react-toastify";
 
@@ -23,7 +23,7 @@ const App: React.FC = () => {
       </Box>
       <Switch>
         <Route exact path="/">
-          <Main />
+          <Manage />
         </Route>
         <Route path="/create">
           <Create />

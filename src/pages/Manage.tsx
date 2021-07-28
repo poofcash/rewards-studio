@@ -22,7 +22,7 @@ import { RegistryList } from "components/RegistryList";
 import { isAddress } from "web3-utils";
 import { useRowSummaries } from "hooks/useRowSummaries";
 
-export const Main: React.FC = () => {
+export const Manage: React.FC = () => {
   const { t } = useTranslation();
   const { address, connect, destroy, network } = useContractKit();
   const [search, setSearch] = React.useState("");
