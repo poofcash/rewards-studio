@@ -1,6 +1,14 @@
 {
   "title": "Rewards Studio",
-  "subtitle": "Create and manage your wrapped CELO",
+  "subtitle": "Create and manage your liquid staking CELO",
+  "manage": {
+    "title": "Manage",
+    "subtitle": "Manage and configure your liquid staking CELO"
+  },
+  "earn": {
+    "title": "Earn",
+    "subtitle": "Earn up to 5-6% APR by staking CELO"
+  },
   "create": {
     "wc": {
       "title": "Create wrapped CELO",

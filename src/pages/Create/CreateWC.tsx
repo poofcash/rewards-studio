@@ -9,7 +9,7 @@ import { AbiItem } from "web3-utils";
 export const CreateWC: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { performActions } = useContractKit();
+  const { performActions, connect } = useContractKit();
   const nameRef = React.createRef<any>();
   const symbolRef = React.createRef<any>();
 
@@ -17,7 +17,7 @@ export const CreateWC: React.FC = () => {
     (tokenName: string, tokenSymbol: string) => {
       performActions(async (kit) => {
         if (!kit.defaultAccount) {
-          alert("No connected account detected");
+          connect();
           return;
         }
         const wrappedCELO = new kit.web3.eth.Contract(
@@ -37,7 +37,7 @@ export const CreateWC: React.FC = () => {
         }
       });
     },
-    [performActions, history]
+    [performActions, history, connect]
   );
 
   return (
