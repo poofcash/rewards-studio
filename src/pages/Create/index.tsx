@@ -20,7 +20,7 @@ export const Create: React.FC = () => {
           width: "fit-content",
         }}
         onClick={() => {
-          history.push("/");
+          history.push("/manage");
         }}
       >
         <ArrowLeft color="var(--theme-ui-colors-text)" />
