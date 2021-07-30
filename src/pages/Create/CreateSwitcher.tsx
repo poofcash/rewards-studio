@@ -20,7 +20,7 @@ export const CreateSwitcher: React.FC = () => {
             : {}
         }
         mr={4}
-        onClick={() => history.push("/create/wrapped")}
+        onClick={() => history.push("/manage/create/wrapped")}
       >
         Wrapped CELO
       </StyledText>
@@ -31,7 +31,7 @@ export const CreateSwitcher: React.FC = () => {
             ? { borderBottom: "4px solid" }
             : {}
         }
-        onClick={() => history.push("/create/voter")}
+        onClick={() => history.push("/manage/create/voter")}
       >
         Voter
       </StyledText>

@@ -29,7 +29,9 @@ export const CreateVoter: React.FC = () => {
             arguments: [wrappedAddress],
           })
           .send({ from: kit.defaultAccount });
-        history.push(`/create/voter/receipt/${contract.options.address}`);
+        history.push(
+          `/manage/create/voter/receipt/${contract.options.address}`
+        );
       });
     },
     [performActions, history]

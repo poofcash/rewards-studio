@@ -30,7 +30,9 @@ export const CreateWC: React.FC = () => {
               arguments: [tokenName, tokenSymbol],
             })
             .send({ from: kit.defaultAccount });
-          history.push(`/create/wrapped/receipt/${contract.options.address}`);
+          history.push(
+            `/manage/create/wrapped/receipt/${contract.options.address}`
+          );
         } catch (e) {
           console.error("Failed to create a wrapped CELO.", e);
           alert(e);

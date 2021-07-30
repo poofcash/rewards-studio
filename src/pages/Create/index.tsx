@@ -32,19 +32,19 @@ export const Create: React.FC = () => {
       <CreateSwitcher />
 
       <Switch>
-        <Route exact path="/create">
-          <Redirect to="/create/wrapped" />
+        <Route exact path="/manage/create">
+          <Redirect to="/manage/create/wrapped" />
         </Route>
-        <Route exact path="/create/wrapped">
+        <Route exact path="/manage/create/wrapped">
           <CreateWC />
         </Route>
-        <Route exact path="/create/voter">
+        <Route exact path="/manage/create/voter">
           <CreateVoter />
         </Route>
-        <Route exact path="/create/wrapped/receipt/:address">
+        <Route exact path="/manage/create/wrapped/receipt/:address">
           <CreateReceipt />
         </Route>
-        <Route exact path="/create/voter/receipt/:address">
+        <Route exact path="/manage/create/voter/receipt/:address">
           <CreateReceipt />
         </Route>
       </Switch>

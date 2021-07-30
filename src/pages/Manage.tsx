@@ -52,7 +52,7 @@ export const Manage: React.FC = () => {
           </Container>
           <Button
             sx={{ width: "200px" }}
-            onClick={() => history.push("/create")}
+            onClick={() => history.push("/manage/create")}
             variant="primary"
           >
             Create
