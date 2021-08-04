@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@celo-tools/use-contractkit": "^1.0.6",
+    "@celo-tools/use-contractkit": "npm:@ubeswap/use-contractkit@^1.0.0-ube.7",
     "@celo/contractkit": "^1.0.2",
     "@celo/wallet-ledger": "^1.0.2",
     "@emotion/react": "^11.4.0",

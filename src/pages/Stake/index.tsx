@@ -18,7 +18,6 @@ import SavingsCELOAbi from "abis/SavingsCELO.json";
 import { AbiItem, toWei, fromWei } from "web3-utils";
 import { SavingsCELO } from "generated/SavingsCELO";
 import { useContractKit } from "@celo-tools/use-contractkit";
-import { SavingsKit } from "@poofcash/savingscelo";
 import { toastTx } from "utils/toastTx";
 import { useCELOBalance } from "hooks/useCELOBalance";
 import { humanFriendlyNumber } from "utils/number";
@@ -46,7 +45,7 @@ export const Stake: React.FC = () => {
   });
   const onGroupChanged = useDebouncedCallback(updateExchangeRate);
   const [celoBalance, refetchCeloBalance] = useCELOBalance();
-  const max = Number(fromWei(celoBalance)) - GAS;
+  const max = Math.max(Number(fromWei(celoBalance)) - GAS, 0);
 
   return (
     <>
@@ -113,13 +112,16 @@ export const Stake: React.FC = () => {
                   alert("No group selected.");
                   return;
                 }
-                const savingsKit = new SavingsKit(kit, wrapped.address);
-                const tx = await savingsKit.deposit().send({
+                const savings = new kit.web3.eth.Contract(
+                  SavingsCELOAbi as AbiItem[],
+                  wrapped.address
+                );
+                const tx = await savings.methods.deposit().send({
                   from: kit.defaultAccount,
                   value: toWei(amount),
                   gasPrice: toWei("0.13", "gwei"),
                 });
-                toastTx(await tx.getHash());
+                toastTx(tx.transactionHash);
                 refetchCeloBalance();
               });
             }}
