@@ -7,6 +7,7 @@ import { Manage } from "pages/Manage";
 import { Create } from "pages/Create";
 import { ToastContainer } from "react-toastify";
 import { Stake } from "pages/Stake";
+import { WalletDrawer } from "components/Wallet/WalletDrawer";
 
 const App: React.FC = () => {
   return (
@@ -49,6 +50,7 @@ const App: React.FC = () => {
         toastClassName="toast-body"
         bodyClassName="toast-body"
       />
+      <WalletDrawer />
     </Container>
   );
 };
