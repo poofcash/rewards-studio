@@ -6,9 +6,10 @@ import { ThemeProvider } from "theme-ui";
 import { BrowserRouter } from "react-router-dom";
 import { ContractKitProvider } from "@celo-tools/use-contractkit";
 import { BrowserRouter as Router } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 
 import "@celo-tools/use-contractkit/lib/styles.css";
-import 'react-toastify/dist/ReactToastify.min.css';
+import "react-toastify/dist/ReactToastify.min.css";
 import "index.css";
 
 declare global {
@@ -30,7 +31,9 @@ ReactDOM.render(
           }}
         >
           <Router>
-            <App />
+            <RecoilRoot>
+              <App />
+            </RecoilRoot>
           </Router>
         </ContractKitProvider>
       </BrowserRouter>

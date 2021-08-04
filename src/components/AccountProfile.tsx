@@ -1,68 +1,75 @@
 import React from "react";
-import { Box, Flex } from "theme-ui";
-import { BlockscoutAddressLink } from "components/Links";
+import styled from "@emotion/styled";
+import { Box, Card, Flex, useColorMode } from "theme-ui";
 import { Text } from "theme-ui";
 import { useContractKit } from "@celo-tools/use-contractkit";
+import { Wallet } from "phosphor-react";
+import { WalletDetails } from "components/Wallet/WalletDetails";
+import { CloseOnClickaway } from "components/CloseOnClickaway";
 import { shortenAddress } from "utils/address";
 
+const HoverDetails = styled(Box)<{ colorMode: string }>(({ colorMode }) => {
+  return {
+    position: "absolute",
+    backgroundColor:
+      colorMode === "dark"
+        ? "var(--theme-ui-colors-secondaryBackground)"
+        : "var(--theme-ui-colors-background)",
+    padding: "12px",
+    top: 60,
+    right: 0,
+    borderRadius: "6px",
+    color: "var(--theme-ui-colors-primaryText)",
+    border: "1px solid",
+  };
+});
+
 export const AccountProfile: React.FC = () => {
-  const { address, destroy, connect } = useContractKit();
+  const { address, connect } = useContractKit();
+  const [colorMode] = useColorMode();
+
+  const [walletDetailsOpen, setWalletDetailsOpen] = React.useState(false);
+
+  const walletCard = React.useRef<HTMLDivElement>(null);
 
   return (
-    <Flex sx={{ alignItems: "center", justifyContent: "flex-end" }}>
-      <Flex
-        sx={{
-          flexDirection: "column",
-          maxWidth: "50vw",
-          mr: 2,
-          textAlign: "right",
-        }}
-      >
-        <Flex
-          sx={{
-            alignItems: "baseline",
-            justifyContent: address ? "space-between" : "flex-end",
+    <Flex sx={{ alignItems: "center" }}>
+      <Box sx={{ position: "relative" }}>
+        <Card
+          ref={walletCard}
+          sx={{ cursor: "pointer" }}
+          variant="warning"
+          ml={5}
+          onClick={() => {
+            if (address) {
+              setWalletDetailsOpen(!walletDetailsOpen);
+            } else {
+              connect();
+            }
           }}
         >
-          {address ? (
-            <Box>
-              <Box>
-                <BlockscoutAddressLink address={address}>
-                  <Text variant="wallet" mr={2}>
-                    {shortenAddress(address)}
-                  </Text>
-                </BlockscoutAddressLink>
-                <Text
-                  sx={{ whiteSpace: "nowrap", cursor: "pointer" }}
-                  onClick={() => {
-                    try {
-                      destroy();
-                    } catch (e) {
-                      console.debug(e);
-                    }
-                  }}
-                  variant="form"
-                >
-                  Disconnect
-                </Text>
-              </Box>
-            </Box>
-          ) : (
-            <>
-              <Text variant="wallet" mr={2}>
-                0x????...????
-              </Text>
-              <Text
-                sx={{ whiteSpace: "nowrap", cursor: "pointer" }}
-                onClick={() => connect().then(console.log).catch(console.error)}
-                variant="form"
-              >
-                Connect
-              </Text>
-            </>
-          )}
-        </Flex>
-      </Flex>
+          <Flex sx={{ alignItems: "center", color: "primaryText" }}>
+            <Wallet size={32} />
+            <Text variant="primary" ml={2} mt={1}>
+              {address ? shortenAddress(address) : "Connect Wallet"}
+            </Text>
+          </Flex>
+        </Card>
+        {address && walletDetailsOpen && (
+          <CloseOnClickaway
+            onClickaway={(e) => {
+              if (walletCard?.current?.contains(e.target)) {
+                return;
+              }
+              setWalletDetailsOpen(false);
+            }}
+          >
+            <HoverDetails colorMode={colorMode}>
+              <WalletDetails />
+            </HoverDetails>
+          </CloseOnClickaway>
+        )}
+      </Box>
     </Flex>
   );
 };

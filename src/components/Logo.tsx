@@ -7,29 +7,29 @@ export const Logo: React.FC = () => {
   const [colorMode, setColorMode] = useColorMode();
 
   return (
-    <Link to="/" style={{ textDecoration: "none", color: "black" }}>
-      <Flex sx={{ alignItems: "center" }}>
+    <Flex sx={{ alignItems: "center" }}>
+      <Link to="/" style={{ textDecoration: "none", color: "black" }}>
         <Text variant="logo">poof</Text>
-        <Text mx={2}>/</Text>
-        {colorMode === "dark" ? (
-          <Moon
-            color="white"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              setColorMode("default");
-            }}
-            size={16}
-          />
-        ) : (
-          <Sun
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              setColorMode("dark");
-            }}
-            size={16}
-          />
-        )}
-      </Flex>
-    </Link>
+      </Link>
+      <Text mx={2}>/</Text>
+      {colorMode === "dark" ? (
+        <Moon
+          color="white"
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setColorMode("default");
+          }}
+          size={16}
+        />
+      ) : (
+        <Sun
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setColorMode("dark");
+          }}
+          size={16}
+        />
+      )}
+    </Flex>
   );
 };

@@ -10,7 +10,8 @@ export const RegistryRow: React.FC<Props> = ({ row }) => {
     <Flex
       sx={{
         width: "100%",
-        border: "1px solid white",
+        color: "text",
+        border: "1px solid",
         p: 2,
         cursor: "pointer",
         justifyContent: "space-between",

@@ -81,7 +81,8 @@ export const Manage: React.FC = () => {
                   outline: "none",
                 },
                 border: "none",
-                borderBottom: "4px solid white",
+                color: "text",
+                borderBottom: "4px solid",
               }}
               placeholder="Search"
               value={search}
