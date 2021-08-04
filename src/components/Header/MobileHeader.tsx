@@ -1,22 +1,22 @@
 import React from "react";
 import { Button, Container, Flex } from "theme-ui";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { WalletCard } from "components/Wallet/WalletCard";
 import { Page } from "components/Header";
 import { Logo } from "components/Logo";
 
 const HeaderButton: React.FC<{ page: Page }> = ({ page, children }) => {
   const location = useLocation();
-  const history = useHistory();
   return (
-    <Button
-      variant={
-        location.pathname.includes(page) ? "switcherSelected" : "switcher"
-      }
-      onClick={() => history.push(page)}
-    >
-      {children}
-    </Button>
+    <Link to={`/${page}`}>
+      <Button
+        variant={
+          location.pathname.includes(page) ? "switcherSelected" : "switcher"
+        }
+      >
+        {children}
+      </Button>
+    </Link>
   );
 };
 
@@ -41,7 +41,7 @@ export const MobileHeader: React.FC = () => {
         }}
         mt={3}
       >
-        <HeaderButton page={Page.EARN}>Earn</HeaderButton>
+        <HeaderButton page={Page.STAKE}>Stake</HeaderButton>
         <HeaderButton page={Page.MANAGE}>Manage</HeaderButton>
       </Flex>
     </Container>

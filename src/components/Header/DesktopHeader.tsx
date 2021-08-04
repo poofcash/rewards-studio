@@ -11,7 +11,7 @@ const HeaderLink: React.FC<{ page: Page }> = ({ page, children }) => {
   const selected = location.pathname.includes(page);
   return (
     <Box mr={3}>
-      <StyledLink to={page}>
+      <StyledLink to={`/${page}`}>
         <Text
           sx={{
             color: selected ? "primary" : "text",
@@ -47,7 +47,7 @@ export const DesktopHeader: React.FC = () => {
             <Box mr={4}>
               <Logo />
             </Box>
-            <HeaderLink page={Page.EARN}>Earn</HeaderLink>
+            <HeaderLink page={Page.STAKE}>Stake</HeaderLink>
             <HeaderLink page={Page.MANAGE}>Manage</HeaderLink>
           </Flex>
           <Box ml={4}>

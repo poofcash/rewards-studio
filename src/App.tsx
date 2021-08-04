@@ -1,12 +1,12 @@
 import React from "react";
 import "i18n/config";
 import { Box, Container } from "theme-ui";
-import { Header } from "components/Header";
+import { Header, Page } from "components/Header";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { Manage } from "pages/Manage";
 import { Create } from "pages/Create";
 import { ToastContainer } from "react-toastify";
-import { Earn } from "pages/Earn";
+import { Stake } from "pages/Stake";
 
 const App: React.FC = () => {
   return (
@@ -31,15 +31,15 @@ const App: React.FC = () => {
       >
         <Switch>
           <Route exact path="/">
-            <Redirect to="/earn" />
+            <Redirect to={`/${Page.STAKE}`} />
           </Route>
-          <Route exact path="/earn">
-            <Earn />
+          <Route exact path={`/${Page.STAKE}`}>
+            <Stake />
           </Route>
-          <Route exact path="/manage">
+          <Route exact path={`/${Page.MANAGE}`}>
             <Manage />
           </Route>
-          <Route path="/manage/create">
+          <Route path={`/${Page.MANAGE_CREATE}`}>
             <Create />
           </Route>
         </Switch>

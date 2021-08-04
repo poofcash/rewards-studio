@@ -20,7 +20,7 @@ import { useContractKit } from "@celo-tools/use-contractkit";
 import { SavingsKit } from "@poofcash/savingscelo";
 import { toastTx } from "utils/toastTx";
 
-export const Earn: React.FC = () => {
+export const Stake: React.FC = () => {
   const { t } = useTranslation();
   const { kit, performActions, connect } = useContractKit();
   const [amount, setAmount] = React.useState("0");
@@ -46,8 +46,8 @@ export const Earn: React.FC = () => {
       <Container mb={6}>
         <Flex sx={{ justifyContent: "space-between", alignItems: "center" }}>
           <Container>
-            <Heading as="h1">{t("earn.title")}</Heading>
-            <Text variant="regularGray">{t("earn.subtitle")}</Text>
+            <Heading as="h1">{t("stake.title")}</Heading>
+            <Text variant="regularGray">{t("stake.subtitle")}</Text>
           </Container>
         </Flex>
       </Container>

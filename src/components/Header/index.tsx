@@ -4,8 +4,9 @@ import { DesktopHeader } from "components/Header/DesktopHeader";
 import { Breakpoint, useBreakpoint } from "hooks/useBreakpoint";
 
 export enum Page {
-  EARN = "earn",
+  STAKE = "stake",
   MANAGE = "manage",
+  MANAGE_CREATE = "manage/create",
 }
 
 export const Header: React.FC = () => {
