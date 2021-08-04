@@ -43,19 +43,25 @@ export const WalletDetails: React.FC<Props> = ({ onClose }) => {
           </CopyToClipboard>
         </Box>
       )}
-      <Flex sx={{ justifyContent: "center" }}>
-        <Button
-          sx={{ whiteSpace: "nowrap" }}
-          variant="secondary"
-          mr={2}
-          onClick={() => connect().catch(console.warn)}
-        >
-          Change Wallet
+      {address ? (
+        <Flex sx={{ justifyContent: "center" }}>
+          <Button
+            sx={{ whiteSpace: "nowrap" }}
+            variant="secondary"
+            mr={2}
+            onClick={() => connect().catch(console.warn)}
+          >
+            Change Wallet
+          </Button>
+          <Button sx={{ whiteSpace: "nowrap" }} onClick={destroy}>
+            Disconnect
+          </Button>
+        </Flex>
+      ) : (
+        <Button onClick={connect} sx={{ width: "100%" }}>
+          Connect
         </Button>
-        <Button sx={{ whiteSpace: "nowrap" }} onClick={destroy}>
-          Disconnect
-        </Button>
-      </Flex>
+      )}
     </Box>
   );
 };
