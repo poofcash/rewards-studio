@@ -9,16 +9,21 @@ import {
   Grid,
   Card,
   Select,
+  Link,
 } from "theme-ui";
 import { useTranslation } from "react-i18next";
 import { REGISTRY, RegistryEntry } from "config";
 import { useDebouncedCallback } from "use-debounce";
 import SavingsCELOAbi from "abis/SavingsCELO.json";
-import { AbiItem, toWei } from "web3-utils";
+import { AbiItem, toWei, fromWei } from "web3-utils";
 import { SavingsCELO } from "generated/SavingsCELO";
 import { useContractKit } from "@celo-tools/use-contractkit";
 import { SavingsKit } from "@poofcash/savingscelo";
 import { toastTx } from "utils/toastTx";
+import { useCELOBalance } from "hooks/useCELOBalance";
+import { humanFriendlyNumber } from "utils/number";
+
+const GAS = 0.01;
 
 export const Stake: React.FC = () => {
   const { t } = useTranslation();
@@ -40,6 +45,8 @@ export const Stake: React.FC = () => {
     updateExchangeRate(wrapped.address);
   });
   const onGroupChanged = useDebouncedCallback(updateExchangeRate);
+  const [celoBalance, refetchCeloBalance] = useCELOBalance();
+  const max = Number(fromWei(celoBalance)) - GAS;
 
   return (
     <>
@@ -53,7 +60,16 @@ export const Stake: React.FC = () => {
       </Container>
       <Flex sx={{ justifyContent: "center" }}>
         <Card sx={{ width: "500px", py: 4, px: 6, maxWidth: "100%" }}>
-          <Text variant="form">Amount</Text>
+          <Flex
+            sx={{ justifyContent: "space-between", alignItems: "baseline" }}
+          >
+            <Text variant="form">Amount</Text>
+            <Text variant="form">
+              <Link onClick={() => setAmount(max.toString())}>
+                max: {humanFriendlyNumber(max)} CELO
+              </Link>
+            </Text>
+          </Flex>
           <Input
             placeholder="Enter an amount"
             mb={2}
@@ -104,6 +120,7 @@ export const Stake: React.FC = () => {
                   gasPrice: toWei("0.13", "gwei"),
                 });
                 toastTx(await tx.getHash());
+                refetchCeloBalance();
               });
             }}
           >

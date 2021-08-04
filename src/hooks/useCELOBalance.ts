@@ -11,7 +11,7 @@ export const useCELOBalance = () => {
       userCeloBalance = await goldContract.methods.balanceOf(address).call();
     }
     return userCeloBalance;
-  }, []);
+  }, [kit, address]);
 
   return useAsyncState("0", call);
 };
