@@ -9,7 +9,7 @@ export const Logo: React.FC = () => {
   return (
     <Flex sx={{ alignItems: "center" }}>
       <Link to="/" style={{ textDecoration: "none", color: "black" }}>
-        <Text variant="logo">poof</Text>
+        <Text variant="logo">Rewards Studio</Text>
       </Link>
       <Text mx={2}>/</Text>
       {colorMode === "dark" ? (

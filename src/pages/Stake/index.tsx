@@ -142,6 +142,15 @@ export const Stake: React.FC = () => {
               </Text>
               <Text>Est. APR</Text>
               <Text sx={{ textAlign: "right" }}>5.1%</Text>
+              <Text>Validator</Text>
+              <Link
+                href={wrapped.validatorUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ textAlign: "right", textDecoration: "none" }}
+              >
+                {wrapped.validatorName}
+              </Link>
             </Grid>
           )}
         </Card>
