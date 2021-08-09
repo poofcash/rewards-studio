@@ -31,4 +31,11 @@ export const REGISTRY: RegistryEntry[] = [
     validatorName: "The Passive Trust",
     validatorUrl: "https://thecelo.com/group/thepassivetrust",
   },
+  {
+    address: "0x97775F815206DAEb81188Af20940deF61c7D6D3B",
+    symbol: "BitCelo",
+    validatorName: "Bitcandy",
+    validatorUrl:
+      "https://thecelo.com/group/0x34649AdA2cB44D851a2103Feaa8922DedDABfc1c",
+  },
 ];
