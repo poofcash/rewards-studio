@@ -30,7 +30,7 @@ const Row: React.FC<RowProps> = ({ index, style, data }) => {
             <Box>
               <Text mr={2}>Amount:</Text>
               <Text>
-                {humanFriendlyWei(pendingWithdrawal.value.toString())} CELO
+                {humanFriendlyWei(pendingWithdrawal.value.toFixed())} CELO
               </Text>
             </Box>
             <Box>
