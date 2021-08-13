@@ -37,6 +37,9 @@ const App: React.FC = () => {
           <Route exact path={`/${Page.STAKE}`}>
             <Stake />
           </Route>
+          <Route exact path={`/${Page.STAKE}/:wrappedTicker`}>
+            <Stake />
+          </Route>
           <Route exact path={`/${Page.MANAGE}`}>
             <Manage />
           </Route>

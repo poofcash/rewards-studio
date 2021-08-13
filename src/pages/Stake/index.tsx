@@ -21,6 +21,7 @@ import { useContractKit } from "@celo-tools/use-contractkit";
 import { toastTx } from "utils/toastTx";
 import { useCELOBalance } from "hooks/useCELOBalance";
 import { humanFriendlyNumber } from "utils/number";
+import { useParams } from "react-router-dom";
 
 const GAS = 0.01;
 
@@ -28,7 +29,17 @@ export const Stake: React.FC = () => {
   const { t } = useTranslation();
   const { kit, performActions, connect } = useContractKit();
   const [amount, setAmount] = React.useState("0");
-  const [wrapped, setWrapped] = React.useState<RegistryEntry>(REGISTRY[0]);
+  let [wrapped, setWrapped] = React.useState<RegistryEntry>(REGISTRY[0]);
+  const { wrappedTicker } = useParams<{ wrappedTicker?: string }>();
+  let tickerMatch = undefined;
+  if (wrappedTicker) {
+    tickerMatch = REGISTRY.find(
+      (x) => x.symbol.toLowerCase() === wrappedTicker
+    );
+    if (tickerMatch) {
+      wrapped = tickerMatch;
+    }
+  }
   const [exchangeRate, setExchangeRate] = React.useState("0");
   const updateExchangeRate = (groupAddress: string) => {
     if (groupAddress === "") {
@@ -71,30 +82,34 @@ export const Stake: React.FC = () => {
           </Flex>
           <Input
             placeholder="Enter an amount"
-            mb={2}
+            mb={tickerMatch ? 4 : 2}
             onChange={(e) => {
               setAmount(e.target.value);
             }}
             value={amount}
           />
-          <Text variant="form">Group</Text>
-          <Select
-            mb={4}
-            sx={{ backgroundColor: "box" }}
-            onChange={(e) => {
-              setWrapped(
-                REGISTRY.find((entry) => entry.address === e.target.value)!
-              );
-              onGroupChanged(e.target.value);
-            }}
-            value={wrapped?.address ?? ""}
-          >
-            {REGISTRY.map((entry, idx) => (
-              <option key={idx} value={entry.address}>
-                {entry.symbol}
-              </option>
-            ))}
-          </Select>
+          {!tickerMatch && (
+            <>
+              <Text variant="form">Group</Text>
+              <Select
+                mb={4}
+                sx={{ backgroundColor: "box" }}
+                onChange={(e) => {
+                  setWrapped(
+                    REGISTRY.find((entry) => entry.address === e.target.value)!
+                  );
+                  onGroupChanged(e.target.value);
+                }}
+                value={wrapped?.address ?? ""}
+              >
+                {REGISTRY.map((entry, idx) => (
+                  <option key={idx} value={entry.address}>
+                    {entry.symbol}
+                  </option>
+                ))}
+              </Select>
+            </>
+          )}
           <Button
             disabled={
               isNaN(Number(amount)) ||
