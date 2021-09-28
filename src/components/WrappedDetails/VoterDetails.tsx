@@ -18,6 +18,7 @@ interface Props {
 export const VoterDetails: React.FC<Props> = ({ wc, refetchWC }) => {
   const { address, performActions } = useContractKit();
 
+  console.log(wc.pendingVotes);
   return (
     <Box>
       <Heading as="h2">Voter details</Heading>
@@ -121,7 +122,7 @@ export const VoterDetails: React.FC<Props> = ({ wc, refetchWC }) => {
             <Text variant="bold" mr={2}>
               Pending votes:
             </Text>
-            <Text>{fromWei(wc.pendingVotes.toString())} CELO</Text>
+            <Text>{fromWei(wc.pendingVotes.toFixed())} CELO</Text>
             <Button
               ml={2}
               disabled={!wc.needsActivate}
