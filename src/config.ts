@@ -1,3 +1,5 @@
+import { ChainId } from "@celo-tools/use-contractkit";
+
 export type RegistryEntry = {
   address: string;
   symbol: string;
@@ -39,3 +41,9 @@ export const REGISTRY: RegistryEntry[] = [
       "https://thecelo.com/group/0x34649AdA2cB44D851a2103Feaa8922DedDABfc1c",
   },
 ];
+
+export const RCELO = {
+  [ChainId.Mainnet]: "0x1a8Dbe5958c597a744Ba51763AbEBD3355996c3e",
+  [ChainId.Alfajores]: "0xBDeedCDA79BAbc4Eb509aB689895a3054461691e",
+  [ChainId.Baklava]: undefined,
+};

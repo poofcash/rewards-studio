@@ -12,24 +12,32 @@ import {
   Link,
 } from "theme-ui";
 import { useTranslation } from "react-i18next";
-import { REGISTRY, RegistryEntry } from "config";
+import { RCELO, REGISTRY, RegistryEntry } from "config";
 import { useDebouncedCallback } from "use-debounce";
 import SavingsCELOAbi from "abis/SavingsCELO.json";
-import { AbiItem, toWei, fromWei } from "web3-utils";
+import RewardsCELOAbi from "abis/RewardsCELO.json";
+import { AbiItem, toWei, fromWei, toBN } from "web3-utils";
 import { SavingsCELO } from "generated/SavingsCELO";
 import { useContractKit } from "@celo-tools/use-contractkit";
 import { toastTx } from "utils/toastTx";
 import { useCELOBalance } from "hooks/useCELOBalance";
 import { humanFriendlyNumber } from "utils/number";
 import { useParams } from "react-router-dom";
+import { useWhiteListedTokens } from "hooks/useWhiteListedTokens";
+import { RewardsCELO } from "generated/RewardsCELO";
 
 const GAS = 0.01;
+const MAX_UINT = toBN(
+  "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+);
+const DEFAULT_GAS = toWei("0.5", "gwei");
 
 export const Stake: React.FC = () => {
   const { t } = useTranslation();
-  const { kit, performActions, connect } = useContractKit();
+  const { kit, performActions, connect, network } = useContractKit();
   const [amount, setAmount] = React.useState("0");
   let [wrapped, setWrapped] = React.useState<RegistryEntry>(REGISTRY[0]);
+  const [whitelistedTokens] = useWhiteListedTokens();
   const { wrappedTicker } = useParams<{ wrappedTicker?: string }>();
   let tickerMatch = undefined;
   if (wrappedTicker) {
@@ -127,16 +135,49 @@ export const Stake: React.FC = () => {
                   alert("No group selected.");
                   return;
                 }
-                const savings = new kit.web3.eth.Contract(
+                const savings = (new kit.web3.eth.Contract(
                   SavingsCELOAbi as AbiItem[],
                   wrapped.address
-                );
-                const tx = await savings.methods.deposit().send({
+                ) as unknown) as SavingsCELO;
+                const savingsAmount = await savings.methods
+                  .celoToSavings(toWei(amount))
+                  .call();
+                const tx1 = await savings.methods.deposit().send({
                   from: kit.defaultAccount,
                   value: toWei(amount),
-                  gasPrice: toWei("0.13", "gwei"),
+                  gasPrice: DEFAULT_GAS,
                 });
-                toastTx(tx.transactionHash);
+                toastTx(tx1.transactionHash);
+
+                const wrappedIdx = whitelistedTokens.indexOf(wrapped.address);
+                const rceloAddress = RCELO[network.chainId];
+                if (wrappedIdx && rceloAddress) {
+                  const allowance = await savings.methods
+                    .allowance(kit.defaultAccount, rceloAddress)
+                    .call();
+
+                  if (toBN(allowance).lt(toBN(savingsAmount))) {
+                    const tx = await savings.methods
+                      .approve(rceloAddress, MAX_UINT)
+                      .send({
+                        from: kit.defaultAccount,
+                        gasPrice: DEFAULT_GAS,
+                      });
+                    toastTx(tx.transactionHash);
+                  }
+                  const rcelo = (new kit.web3.eth.Contract(
+                    RewardsCELOAbi as AbiItem[],
+                    rceloAddress
+                  ) as unknown) as RewardsCELO;
+                  const tx2 = await rcelo.methods
+                    .deposit(savingsAmount, wrappedIdx)
+                    .send({
+                      from: kit.defaultAccount,
+                      gasPrice: DEFAULT_GAS,
+                    });
+                  toastTx(tx2.transactionHash);
+                }
+
                 refetchCeloBalance();
               });
             }}
