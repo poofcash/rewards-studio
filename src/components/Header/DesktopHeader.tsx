@@ -8,8 +8,10 @@ import { Page } from "components/Header";
 import { useTokenBalance } from "hooks/useTokenBalance";
 import { RCELO } from "config";
 import { useContractKit } from "@celo-tools/use-contractkit";
-import { humanFriendlyNumber } from "utils/number";
+import { humanFriendlyNumber, humanFriendlyWei } from "utils/number";
 import { fromWei } from "web3-utils";
+import { useCELOBalance } from "hooks/useCELOBalance";
+import { usePendingCELOBalance } from "hooks/usePendingCELOBalance";
 
 const HeaderLink: React.FC<{ page: Page }> = ({ page, children }) => {
   const location = useLocation();
@@ -36,7 +38,9 @@ const HeaderLink: React.FC<{ page: Page }> = ({ page, children }) => {
 export const DesktopHeader: React.FC = () => {
   const { network } = useContractKit();
   const [rceloBalance] = useTokenBalance(RCELO[network.chainId]);
-  console.log(rceloBalance);
+  const [celoBalance] = useCELOBalance();
+  const pendingCeloBalance = usePendingCELOBalance();
+  console.log(pendingCeloBalance);
 
   return (
     <>
@@ -64,7 +68,17 @@ export const DesktopHeader: React.FC = () => {
               <Text variant="primary">
                 {humanFriendlyNumber(Math.floor(Number(fromWei(rceloBalance))))}
               </Text>{" "}
-              rCELO
+              <Text>rCELO</Text>
+              <Text>{" | "}</Text>
+              <Text variant="primary">
+                {humanFriendlyNumber(Math.floor(Number(fromWei(celoBalance))))}
+              </Text>{" "}
+              <Text>CELO</Text>
+              <Text>{" | "}</Text>
+              <Text variant="primary">
+                {humanFriendlyWei(pendingCeloBalance.toString())}
+              </Text>{" "}
+              <Text>Pending CELO</Text>
             </Card>
             <AccountProfile />
           </Flex>
