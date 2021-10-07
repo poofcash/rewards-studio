@@ -32,9 +32,10 @@ const GAS = 0.01;
 const Switcher = styled(Box)(({ selected }: { selected: boolean }) => ({
   background: selected
     ? "var(--theme-ui-colors-primary)"
-    : "var(---theme-ui-colors-box)",
+    : "var(--theme-ui-colors-box)",
   padding: "8px",
   cursor: "pointer",
+  color: `var(--theme-ui-colors-${selected ? "primaryButtonText" : "text"})`,
 }));
 
 export const Stake: React.FC = () => {
