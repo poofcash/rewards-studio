@@ -10,34 +10,39 @@ import {
   Card,
   Select,
   Link,
+  Box,
 } from "theme-ui";
 import { useTranslation } from "react-i18next";
 import { RCELO, REGISTRY, RegistryEntry } from "config";
-import { useDebouncedCallback } from "use-debounce";
-import SavingsCELOAbi from "abis/SavingsCELO.json";
-import RewardsCELOAbi from "abis/RewardsCELO.json";
-import { AbiItem, toWei, fromWei, toBN } from "web3-utils";
-import { SavingsCELO } from "generated/SavingsCELO";
+import { fromWei } from "web3-utils";
 import { useContractKit } from "@celo-tools/use-contractkit";
-import { toastTx } from "utils/toastTx";
 import { useCELOBalance } from "hooks/useCELOBalance";
 import { humanFriendlyNumber } from "utils/number";
 import { useParams } from "react-router-dom";
-import { useWhiteListedTokens } from "hooks/useWhiteListedTokens";
-import { RewardsCELO } from "generated/RewardsCELO";
+import styled from "@emotion/styled";
+import { useTokenBalance } from "hooks/useTokenBalance";
+import { useGroupExchangeRate } from "hooks/useGroupExchangeRate";
+import { useRCELOExchangeRate } from "hooks/useRCELOExchangeRate";
+import { useStake } from "hooks/useStake";
+import { useUnstake } from "hooks/useUnstake";
+import { UnstakedWarning } from "components/UnstakedWarning";
 
 const GAS = 0.01;
-const MAX_UINT = toBN(
-  "115792089237316195423570985008687907853269984665640564039457584007913129639935"
-);
-const DEFAULT_GAS = toWei("0.5", "gwei");
+
+const Switcher = styled(Box)(({ selected }: { selected: boolean }) => ({
+  background: selected
+    ? "var(--theme-ui-colors-primary)"
+    : "var(---theme-ui-colors-box)",
+  padding: "8px",
+  cursor: "pointer",
+}));
 
 export const Stake: React.FC = () => {
   const { t } = useTranslation();
-  const { kit, performActions, connect, network } = useContractKit();
+  const { network } = useContractKit();
+  const [staking, setStaking] = React.useState(true);
   const [amount, setAmount] = React.useState("0");
   let [wrapped, setWrapped] = React.useState<RegistryEntry>(REGISTRY[0]);
-  const [whitelistedTokens] = useWhiteListedTokens();
   const { wrappedTicker } = useParams<{ wrappedTicker?: string }>();
   let tickerMatch = undefined;
   if (wrappedTicker) {
@@ -48,55 +53,88 @@ export const Stake: React.FC = () => {
       wrapped = tickerMatch;
     }
   }
-  const [exchangeRate, setExchangeRate] = React.useState("0");
-  const updateExchangeRate = (groupAddress: string) => {
-    if (groupAddress === "") {
-      return;
-    }
-    const tokenContract = (new kit.web3.eth.Contract(
-      SavingsCELOAbi as AbiItem[],
-      groupAddress
-    ) as unknown) as SavingsCELO;
-    tokenContract.methods.celoToSavings(1).call().then(setExchangeRate);
-  };
-  React.useEffect(() => {
-    updateExchangeRate(wrapped.address);
-  });
-  const onGroupChanged = useDebouncedCallback(updateExchangeRate);
-  const [celoBalance, refetchCeloBalance] = useCELOBalance();
-  const max = Math.max(Number(fromWei(celoBalance)) - GAS, 0);
+
+  const [exchangeRate] = useGroupExchangeRate(wrapped.address);
+  const [rceloExchangeRate] = useRCELOExchangeRate();
+  const [celoBalance] = useCELOBalance();
+  const [rceloBalance] = useTokenBalance(RCELO[network.chainId]);
+  const stake = useStake(amount, wrapped);
+  const unstake = useUnstake(amount);
+  const max = staking
+    ? Math.max(Number(fromWei(celoBalance)) - GAS, 0)
+    : fromWei(rceloBalance);
+  const receiveAmount = staking
+    ? Number(amount) * Number(exchangeRate)
+    : Number(amount) / Number(rceloExchangeRate);
+  const action = staking ? stake : unstake;
 
   return (
     <>
       <Container mb={6}>
-        <Flex sx={{ justifyContent: "space-between", alignItems: "center" }}>
+        <Flex
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Container>
             <Heading as="h1">{t("stake.title")}</Heading>
             <Text variant="regularGray">{t("stake.subtitle")}</Text>
           </Container>
         </Flex>
       </Container>
-      <Flex sx={{ justifyContent: "center" }}>
+      <Flex sx={{ alignItems: "center", flexDirection: "column" }}>
+        <UnstakedWarning />
         <Card sx={{ width: "500px", py: 4, px: 6, maxWidth: "100%" }}>
+          <Flex
+            sx={{
+              alignItems: "center",
+              justifyContent: "center",
+              mb: 4,
+            }}
+          >
+            <Switcher
+              sx={{
+                border: "4px solid var(--theme-ui-colors-primary)",
+                borderRight: "none",
+                borderRadius: "6px 0px 0px 6px",
+              }}
+              selected={staking}
+              onClick={() => setStaking(true)}
+            >
+              Stake
+            </Switcher>
+            <Switcher
+              sx={{
+                border: "4px solid var(--theme-ui-colors-primary)",
+                borderLeft: "none",
+                borderRadius: "0px 6px 6px 0px",
+              }}
+              selected={!staking}
+              onClick={() => setStaking(false)}
+            >
+              Unstake
+            </Switcher>
+          </Flex>
           <Flex
             sx={{ justifyContent: "space-between", alignItems: "baseline" }}
           >
             <Text variant="form">Amount</Text>
             <Text variant="form">
               <Link onClick={() => setAmount(max.toString())}>
-                max: {humanFriendlyNumber(max)} CELO
+                max: {humanFriendlyNumber(max)} {staking ? "CELO" : "rCELO"}
               </Link>
             </Text>
           </Flex>
           <Input
             placeholder="Enter an amount"
-            mb={tickerMatch ? 4 : 2}
+            mb={tickerMatch || !staking ? 4 : 2}
             onChange={(e) => {
               setAmount(e.target.value);
             }}
             value={amount}
           />
-          {!tickerMatch && (
+          {!tickerMatch && staking && (
             <>
               <Text variant="form">Group</Text>
               <Select
@@ -106,7 +144,6 @@ export const Stake: React.FC = () => {
                   setWrapped(
                     REGISTRY.find((entry) => entry.address === e.target.value)!
                   );
-                  onGroupChanged(e.target.value);
                 }}
                 value={wrapped?.address ?? ""}
               >
@@ -125,88 +162,40 @@ export const Stake: React.FC = () => {
               wrapped === undefined
             }
             sx={{ width: "100%" }}
-            onClick={() => {
-              performActions(async (kit) => {
-                if (!kit.defaultAccount) {
-                  connect();
-                  return;
-                }
-                if (!wrapped) {
-                  alert("No group selected.");
-                  return;
-                }
-                const savings = (new kit.web3.eth.Contract(
-                  SavingsCELOAbi as AbiItem[],
-                  wrapped.address
-                ) as unknown) as SavingsCELO;
-                const savingsAmount = await savings.methods
-                  .celoToSavings(toWei(amount))
-                  .call();
-                const tx1 = await savings.methods.deposit().send({
-                  from: kit.defaultAccount,
-                  value: toWei(amount),
-                  gasPrice: DEFAULT_GAS,
-                });
-                toastTx(tx1.transactionHash);
-
-                const wrappedIdx = whitelistedTokens.indexOf(wrapped.address);
-                const rceloAddress = RCELO[network.chainId];
-                if (wrappedIdx && rceloAddress) {
-                  const allowance = await savings.methods
-                    .allowance(kit.defaultAccount, rceloAddress)
-                    .call();
-
-                  if (toBN(allowance).lt(toBN(savingsAmount))) {
-                    const tx = await savings.methods
-                      .approve(rceloAddress, MAX_UINT)
-                      .send({
-                        from: kit.defaultAccount,
-                        gasPrice: DEFAULT_GAS,
-                      });
-                    toastTx(tx.transactionHash);
-                  }
-                  const rcelo = (new kit.web3.eth.Contract(
-                    RewardsCELOAbi as AbiItem[],
-                    rceloAddress
-                  ) as unknown) as RewardsCELO;
-                  const tx2 = await rcelo.methods
-                    .deposit(savingsAmount, wrappedIdx)
-                    .send({
-                      from: kit.defaultAccount,
-                      gasPrice: DEFAULT_GAS,
-                    });
-                  toastTx(tx2.transactionHash);
-                }
-
-                refetchCeloBalance();
-              });
-            }}
+            onClick={action}
           >
-            Stake
+            {staking ? "Stake" : "Unstake"}
           </Button>
           {wrapped && (
             <Grid columns={[2, "1fr auto"]} mt={4}>
               <Text>You will receive</Text>
               <Text sx={{ textAlign: "right" }}>
-                {(Number(exchangeRate) * Number(amount)).toLocaleString()}{" "}
-                {wrapped.symbol}
+                {receiveAmount.toLocaleString()}{" "}
+                {staking ? wrapped.symbol : "CELO"}
               </Text>
               <Text>Exchange rate</Text>
               <Text sx={{ textAlign: "right" }}>
-                1 CELO = {Number(exchangeRate).toLocaleString()}{" "}
-                {wrapped.symbol}
+                1 CELO ={" "}
+                {Number(
+                  staking ? exchangeRate : rceloExchangeRate
+                ).toLocaleString()}{" "}
+                {staking ? wrapped.symbol : "rCELO"}
               </Text>
-              <Text>Est. APR</Text>
-              <Text sx={{ textAlign: "right" }}>5.1%</Text>
-              <Text>Validator</Text>
-              <Link
-                href={wrapped.validatorUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ textAlign: "right", textDecoration: "none" }}
-              >
-                {wrapped.validatorName}
-              </Link>
+              {staking && (
+                <>
+                  <Text>Est. APR</Text>
+                  <Text sx={{ textAlign: "right" }}>5.1%</Text>
+                  <Text>Validator</Text>
+                  <Link
+                    href={wrapped.validatorUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{ textAlign: "right", textDecoration: "none" }}
+                  >
+                    {wrapped.validatorName}
+                  </Link>
+                </>
+              )}
             </Grid>
           )}
         </Card>

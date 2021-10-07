@@ -1,4 +1,5 @@
 import { ChainId } from "@celo-tools/use-contractkit";
+import { toBN, toWei } from "web3-utils";
 
 export type RegistryEntry = {
   address: string;
@@ -47,3 +48,8 @@ export const RCELO = {
   [ChainId.Alfajores]: "0xBDeedCDA79BAbc4Eb509aB689895a3054461691e",
   [ChainId.Baklava]: undefined,
 };
+
+export const MAX_UINT = toBN(
+  "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+);
+export const DEFAULT_GAS = toWei("0.5", "gwei");

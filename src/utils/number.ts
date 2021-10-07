@@ -24,5 +24,5 @@ export const humanFriendlyNumber = (v: number | string) => {
 };
 
 export const humanFriendlyWei = (wei: BN | string) => {
-  return humanFriendlyNumber(fromWei(wei));
+  return humanFriendlyNumber(fromWei(wei.toString()));
 };
