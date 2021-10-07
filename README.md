@@ -1,4 +1,4 @@
-# Poof.cash stats
+# Rewards Studio
 
 ## Requirements
 
@@ -14,8 +14,6 @@ yarn start
 ```
 
 ## Production build
-
-Mainnet
 
 ```
 yarn run build
