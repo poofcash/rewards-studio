@@ -21,7 +21,6 @@ import { humanFriendlyNumber } from "utils/number";
 import { useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import { useTokenBalance } from "hooks/useTokenBalance";
-import { useGroupExchangeRate } from "hooks/useGroupExchangeRate";
 import { useRCELOExchangeRate } from "hooks/useRCELOExchangeRate";
 import { useStake } from "hooks/useStake";
 import { useUnstake } from "hooks/useUnstake";
@@ -55,7 +54,6 @@ export const Stake: React.FC = () => {
     }
   }
 
-  const [exchangeRate] = useGroupExchangeRate(wrapped.address);
   const [rceloExchangeRate] = useRCELOExchangeRate();
   const [celoBalance] = useCELOBalance();
   const [rceloBalance] = useTokenBalance(RCELO[network.chainId]);
@@ -65,7 +63,7 @@ export const Stake: React.FC = () => {
     ? Math.max(Number(fromWei(celoBalance)) - GAS, 0)
     : fromWei(rceloBalance);
   const receiveAmount = staking
-    ? Number(amount) * Number(exchangeRate)
+    ? Number(amount) * Number(rceloExchangeRate)
     : Number(amount) / Number(rceloExchangeRate);
   const action = staking ? stake : unstake;
 
@@ -171,16 +169,11 @@ export const Stake: React.FC = () => {
             <Grid columns={[2, "1fr auto"]} mt={4}>
               <Text>You will receive</Text>
               <Text sx={{ textAlign: "right" }}>
-                {receiveAmount.toLocaleString()}{" "}
-                {staking ? wrapped.symbol : "CELO"}
+                {receiveAmount.toLocaleString()} {staking ? "rCELO" : "CELO"}
               </Text>
               <Text>Exchange rate</Text>
               <Text sx={{ textAlign: "right" }}>
-                1 CELO ={" "}
-                {Number(
-                  staking ? exchangeRate : rceloExchangeRate
-                ).toLocaleString()}{" "}
-                {staking ? wrapped.symbol : "rCELO"}
+                1 CELO = {Number(rceloExchangeRate).toLocaleString()} rCELO
               </Text>
               {staking && (
                 <>
