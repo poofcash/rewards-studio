@@ -41,7 +41,7 @@ export const REGISTRY: RegistryEntry[] = [
     validatorUrl:
       "https://thecelo.com/group/0x34649AdA2cB44D851a2103Feaa8922DedDABfc1c",
   },
-];
+].sort(() => 0.5 - Math.random());
 
 export const RCELO = {
   [ChainId.Mainnet]: "0x1a8Dbe5958c597a744Ba51763AbEBD3355996c3e",
