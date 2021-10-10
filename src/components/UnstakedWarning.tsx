@@ -1,7 +1,7 @@
 import { Box, Button, Card, Flex, Text } from "@theme-ui/components";
 import { useGroupBalances } from "hooks/useGroupBalances";
 import { useStakeAllGroups } from "hooks/useStakeAllGroups";
-import { useUnstakeAllGroups } from "hooks/useUnstakeAllGroups";
+import { useWithdrawStartAllGroups } from "hooks/useWithdrawStartAllGroups";
 import React from "react";
 import { humanFriendlyWei } from "utils/number";
 import { toBN } from "web3-utils";
@@ -10,7 +10,7 @@ export const UnstakedWarning = () => {
   const [groupBalances, refetchGroupBalances] = useGroupBalances();
   const show = groupBalances.some((g) => toBN(g.balance).gt(toBN(0)));
   const stakeAll = useStakeAllGroups();
-  const unstakeAll = useUnstakeAllGroups();
+  const unstakeAll = useWithdrawStartAllGroups();
 
   if (!show) {
     return null;
@@ -41,8 +41,8 @@ export const UnstakedWarning = () => {
         })}
         <Flex sx={{ justifyContent: "center", mt: 3 }}>
           <Button
-            onClick={() => {
-              unstakeAll();
+            onClick={async () => {
+              await unstakeAll();
               refetchGroupBalances();
             }}
             mr={3}
@@ -50,8 +50,8 @@ export const UnstakedWarning = () => {
             Convert to CELO
           </Button>
           <Button
-            onClick={() => {
-              stakeAll();
+            onClick={async () => {
+              await stakeAll();
               refetchGroupBalances();
             }}
           >

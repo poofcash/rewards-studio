@@ -8,7 +8,7 @@ import { AbiItem, toBN } from "web3-utils";
 import { useWhiteListedTokens } from "./useWhiteListedTokens";
 import { SavingsKit } from "@poofcash/savingscelo";
 
-export const useUnstakeAllGroups = () => {
+export const useWithdrawStartAllGroups = () => {
   const { performActions, connect } = useContractKit();
   const [whitelistedTokens] = useWhiteListedTokens();
   return useCallback(() => {

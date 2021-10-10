@@ -40,7 +40,6 @@ export const DesktopHeader: React.FC = () => {
   const [rceloBalance] = useTokenBalance(RCELO[network.chainId]);
   const [celoBalance] = useCELOBalance();
   const pendingCeloBalance = usePendingCELOBalance();
-  console.log(pendingCeloBalance);
 
   return (
     <>

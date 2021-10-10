@@ -25,6 +25,7 @@ import { useRCELOExchangeRate } from "hooks/useRCELOExchangeRate";
 import { useStake } from "hooks/useStake";
 import { useUnstake } from "hooks/useUnstake";
 import { UnstakedWarning } from "components/UnstakedWarning";
+import { PendingCeloWarning } from "components/PendingCeloWarning";
 
 const GAS = 0.01;
 
@@ -84,6 +85,7 @@ export const Stake: React.FC = () => {
       </Container>
       <Flex sx={{ alignItems: "center", flexDirection: "column" }}>
         <UnstakedWarning />
+        <PendingCeloWarning />
         <Card sx={{ width: "500px", py: 4, px: 6, maxWidth: "100%" }}>
           <Flex
             sx={{
