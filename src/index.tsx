@@ -28,6 +28,8 @@ ReactDOM.render(
             name: "Rewards Studio",
             description: "Create an manage wrapped CELO tokens",
             url: window.location.href.slice(0, window.location.href.length - 1),
+            icon:
+              "https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_rCELO.png",
           }}
         >
           <Router>
