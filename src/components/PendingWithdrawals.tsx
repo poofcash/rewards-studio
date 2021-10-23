@@ -63,6 +63,7 @@ const Row: React.FC<RowProps> = ({ index, style, data }) => {
             <LogOut />
           </Button>
           <Button
+            backgroundColor="red"
             onClick={() => {
               performActions(async (kit) => {
                 if (!kit.defaultAccount) {
