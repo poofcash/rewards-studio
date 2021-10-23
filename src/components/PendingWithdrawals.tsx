@@ -9,6 +9,7 @@ import { SavingsKit } from "@poofcash/savingscelo";
 import { WC } from "hooks/useWrappedCELO";
 import { toastTx } from "utils/toastTx";
 import { toWei } from "web3-utils";
+import { X } from "phosphor-react";
 
 interface RowProps {
   index: number;
@@ -39,6 +40,7 @@ const Row: React.FC<RowProps> = ({ index, style, data }) => {
             </Box>
           </Box>
           <Button
+            mr={2}
             disabled={eta.unix() > now.unix()}
             onClick={() => {
               performActions(async (kit) => {
@@ -59,6 +61,27 @@ const Row: React.FC<RowProps> = ({ index, style, data }) => {
             }}
           >
             <LogOut />
+          </Button>
+          <Button
+            onClick={() => {
+              performActions(async (kit) => {
+                if (!kit.defaultAccount) {
+                  alert("No connected account.");
+                  return;
+                }
+                const savingsKit = new SavingsKit(kit, wc.tokenAddress);
+                const tx = await (
+                  await savingsKit.withdrawCancel(wc.pendingWithdrawals, index)
+                ).send({
+                  from: kit.defaultAccount,
+                  gasPrice: toWei("0.13", "gwei"),
+                });
+                toastTx(await tx.getHash());
+                refetchWC();
+              });
+            }}
+          >
+            <X size={24} />
           </Button>
         </Flex>
       </Card>
