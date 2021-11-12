@@ -1,5 +1,5 @@
 import { useContractKit } from "@celo-tools/use-contractkit";
-import { DEFAULT_GAS, RCELO } from "config";
+import { DEFAULT_GAS, MAX_UINT, RCELO } from "config";
 import { useCallback } from "react";
 import { SavingsCELO } from "generated/SavingsCELO";
 import { RewardsCELO } from "generated/RewardsCELO";
@@ -27,6 +27,15 @@ export const useStakeAllGroups = () => {
         const balance = await savings.methods
           .balanceOf(kit.defaultAccount)
           .call();
+        const allowance = await savings.methods
+          .allowance(kit.defaultAccount, RCELO[network.chainId]!)
+          .call();
+        if (toBN(allowance).lt(toBN(balance))) {
+          const tx = await savings.methods
+            .approve(RCELO[network.chainId]!, MAX_UINT)
+            .send({ from: kit.defaultAccount, gasPrice: DEFAULT_GAS });
+          toastTx(tx.transactionHash);
+        }
         if (toBN(balance).gt(toBN(0))) {
           const rcelo = (new kit.web3.eth.Contract(
             RewardsCELOAbi as AbiItem[],
