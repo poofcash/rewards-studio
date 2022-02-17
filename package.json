@@ -93,6 +93,6 @@
     "*.{js,css,md,tsx,ts}": "prettier --write"
   },
   "resolutions": {
-    "@celo/wallet-walletconnect": "1.2.0"
+    "@celo/wallet-walletconnect": "=1.2.0"
   }
 }
